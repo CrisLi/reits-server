@@ -4,5 +4,5 @@ const port = app.get('port');
 const server = app.listen(port);
 
 server.on('listening', () =>
-  console.log(`Ignitee application started on ${app.get('host')}:${port}`)
+  console.log(`Reits server started on ${app.get('host')}:${port}`)
 );

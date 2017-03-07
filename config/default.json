@@ -12,5 +12,11 @@
     },
     "localEndpoint": "/auth",
     "local": {}
+  },
+  "service": {
+    "paginate": {
+      "default": 500,
+      "max": 500
+    }
   }
 }

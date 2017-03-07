@@ -20,7 +20,7 @@ module.exports = new winston.Logger({
     }),
     new FileLogger({
       level: 'info',
-      filename: path.join(dir, 'reist.'),
+      filename: path.join(dir, 'reits.'),
       datePattern: 'yyyy-MM-dd.log',
       timestamp: () => moment(),
       json: true,

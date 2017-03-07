@@ -8,6 +8,10 @@ const tenantSchema = new Schema({
     required: true,
     unique: true
   },
+  type: {
+    type: String,
+    enum: ['Admin', 'Client', 'Provider'],
+  },
   name: {
     type: String,
     required: true
