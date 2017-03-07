@@ -17,7 +17,8 @@ const tenantSchema = new Schema({
     required: true
   },
   description: {
-    type: String
+    type: String,
+    default: ''
   }
 }, { timestamps: true });
 

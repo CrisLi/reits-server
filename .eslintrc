@@ -1,3 +1,7 @@
 {
-  "extends": "kitty"
+  "extends": "kitty",
+  "rules": {
+    "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 6 }],
+    "import/no-extraneous-dependencies": 0
+  }
 }
