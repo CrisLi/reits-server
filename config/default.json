@@ -1,0 +1,16 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "mongodb": "mongodb://localhost:27017/reits",
+  "public": "../public/",
+  "auth": {
+    "token": {
+      "secret": "v0u9Jc7qi3R88Zv6pnXLvrNHoDb8kNEpoGTnjNK3aQUphp+s30u0Ne0qxQJ/QcDurvptftpKs3kVE/y+vJPizg==",
+      "expiresIn": "1d",
+      "payload": ["email", "displayName"],
+      "issuer": "reits"
+    },
+    "localEndpoint": "/auth",
+    "local": {}
+  }
+}
