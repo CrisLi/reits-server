@@ -1,6 +1,7 @@
 const hooks = require('feathers-hooks');
-const slug = require('slug');
+const auth = require('feathers-authentication').hooks;
 const { iff, isProvider } = require('feathers-hooks-common');
+const slug = require('slug');
 const { validate } = require('../../../hooks');
 const schema = require('../schema');
 
@@ -26,7 +27,9 @@ exports.before = {
     externalRequest()
   ],
   create: [
-    hooks.remove('type'),
+    auth.verifyToken(),
+    auth.populateUser(),
+    auth.restrictToAuthenticated(),
     validate(schema),
     setValue('slug', data => slug(data.name, { lower: true })),
     iff(isProvider('external'), setValue('type', () => 'Provider'))

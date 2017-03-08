@@ -11,6 +11,7 @@ const tenantSchema = new Schema({
   type: {
     type: String,
     enum: ['Admin', 'Client', 'Provider'],
+    required: true
   },
   name: {
     type: String,
