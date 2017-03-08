@@ -12,6 +12,7 @@ const rest = require('feathers-rest');
 const bodyParser = require('body-parser');
 const services = require('./services');
 const middleware = require('./middleware');
+const init = require('./init');
 
 const app = feathers();
 

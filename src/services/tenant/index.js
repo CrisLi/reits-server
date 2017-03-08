@@ -2,7 +2,6 @@ const service = require('feathers-mongoose');
 const tenant = require('./tenant-modal');
 const hooks = require('./hooks');
 const events = require('./events');
-const init = require('./init');
 
 module.exports = function() {
   const app = this;
@@ -23,6 +22,4 @@ module.exports = function() {
   tenantService.after(hooks.after);
 
   events(tenantService, app);
-
-  init(app);
 };

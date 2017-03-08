@@ -21,16 +21,16 @@ module.exports = (app) => {
       }
     };
 
-    tenantService
+    return tenantService
       .find(params)
       .then(({ total }) => {
         if (total === 0) {
           app.logger.info(`No ${data.name} tenant found, create one.`);
-          tenantService.create(data);
+          return tenantService.create(data);
         }
+        return data;
       });
   };
 
-  createTenant(admin);
-  createTenant(client);
+  return Promise.all([createTenant(admin), createTenant(client)]);
 };
