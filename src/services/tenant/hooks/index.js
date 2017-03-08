@@ -1,7 +1,7 @@
 const hooks = require('feathers-hooks');
 const slug = require('slug');
 const { iff, isProvider } = require('feathers-hooks-common');
-const validate = require('../../../hooks/validate');
+const { validate } = require('../../../hooks');
 const schema = require('../schema');
 
 const setValue = (key, cb) => (
@@ -11,7 +11,20 @@ const setValue = (key, cb) => (
   }
 );
 
+const externalRequest = () => (
+  iff(isProvider('external'), (hook) => {
+    const { params: { query } } = hook;
+    query['type'] = 'Provider';
+  })
+);
+
 exports.before = {
+  all: [
+    hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
+  ],
+  find: [
+    externalRequest()
+  ],
   create: [
     hooks.remove('type'),
     validate(schema),
@@ -19,9 +32,21 @@ exports.before = {
     iff(isProvider('external'), setValue('type', () => 'Provider'))
   ],
   update: [
-    hooks.remove('type')
+    (hook) => {
+      console.log(hook.id);
+    },
+    hooks.remove('name', 'type', 'slug'),
+    externalRequest()
   ],
   patch: [
-    hooks.remove('type')
+    hooks.remove('name', 'type', 'slug'),
+    externalRequest()
+  ],
+  remove: hooks.disable('external')
+};
+
+exports.after = {
+  all: [
+    hooks.remove('type', '__v')
   ]
 };
