@@ -11,19 +11,21 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 
+const timestamp = () => moment().format();
+
 module.exports = new winston.Logger({
   transports: [
     new winston.transports.Console({
       level,
-      timestamp: () => moment(),
-      json: true,
+      timestamp,
+      json: false,
       colorize: true
     }),
     new FileLogger({
       level,
+      timestamp,
       filename: path.join(dir, 'reits.'),
       datePattern: 'yyyy-MM-dd.log',
-      timestamp: () => moment(),
       json: true,
       colorize: false
     })
