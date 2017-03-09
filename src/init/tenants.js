@@ -1,12 +1,12 @@
 module.exports = (app) => {
   const admin = {
-    slug: 'reits',
+    _id: 'reits',
     name: 'reits',
     type: 'Admin',
     description: 'The reits admin tenant to manage service providers.'
   };
   const client = {
-    slug: 'client',
+    _id: 'client',
     name: 'client',
     type: 'Client',
     description: 'The client tenant for all client users.'
@@ -14,19 +14,12 @@ module.exports = (app) => {
 
   const createTenant = (data) => {
     const tenantService = app.service('/tenants');
-    const params = {
-      query: {
-        $limit: 1,
-        slug: data.slug
-      }
-    };
 
     return tenantService
-      .find(params)
-      .then(({ total }) => {
-        if (total === 0) {
-          app.logger.info(`No ${data.name} tenant found, create one.`);
-          return tenantService.create(data);
+      .create(data)
+      .catch((err) => {
+        if (err.code !== 409) {
+          throw err;
         }
         return data;
       });

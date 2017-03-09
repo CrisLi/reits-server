@@ -31,15 +31,14 @@ exports.before = {
     auth.populateUser(),
     auth.restrictToAuthenticated(),
     validate(schema),
-    setValue('slug', data => slug(data.name, { lower: true })),
+    setValue('_id', data => slug(data.name, { lower: true })),
     iff(isProvider('external'), setValue('type', () => 'Provider'))
   ],
   update: [
     (hook) => {
       console.log(hook.id);
     },
-    hooks.remove('name', 'type', 'slug'),
-    externalRequest()
+    hooks.remove('name', 'type', 'slug')
   ],
   patch: [
     hooks.remove('name', 'type', 'slug'),

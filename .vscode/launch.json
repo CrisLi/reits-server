@@ -7,8 +7,8 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "nodemon",
-      "runtimeExecutable": "nodemon",
+      "name": "debug",
+      "runtimeExecutable": "node",
       "runtimeArgs": [
         "--debug=5858"
       ],

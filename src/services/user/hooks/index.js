@@ -1,9 +1,12 @@
-const { logger } = require('../../../hooks');
 const hooks = require('feathers-hooks');
 const auth = require('feathers-authentication').hooks;
+const { validate } = require('../../../hooks');
+const schema = require('../schema');
 
 exports.before = {
-  all: [],
+  all: [
+    hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
+  ],
   find: [
     auth.verifyToken(),
     auth.populateUser(),
@@ -16,6 +19,7 @@ exports.before = {
     auth.restrictToOwner({ ownerField: '_id' })
   ],
   create: [
+    validate(schema),
     auth.hashPassword()
   ],
   update: [
@@ -39,21 +43,5 @@ exports.before = {
 };
 
 exports.after = {
-  all: [hooks.remove('password')],
-  find: [
-    logger()
-  ],
-  get: [],
-  create: [
-    logger()
-  ],
-  update: [
-    logger()
-  ],
-  patch: [
-    logger()
-  ],
-  remove: [
-    logger()
-  ]
+  all: [hooks.remove('password')]
 };

@@ -8,9 +8,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   tenantId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Tenant',
-    required: true
+    required: true,
+    index: 1
   },
   email: {
     type: String,
@@ -25,7 +26,8 @@ const userSchema = new Schema({
     type: String
   },
   role: {
-    enum: ['Admin', 'PM', 'FA', 'Finance', 'User']
+    type: [String],
+    enum: ['Admin', 'PM', 'FA', 'Finance', 'Client']
   }
 }, {
   timestamps: true

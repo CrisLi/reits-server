@@ -3,25 +3,27 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const tenantSchema = new Schema({
-  slug: {
+  _id: {
     type: String,
-    required: true,
-    unique: true
-  },
-  type: {
-    type: String,
-    enum: ['Admin', 'Client', 'Provider'],
     required: true
   },
   name: {
     type: String,
     required: true
   },
+  type: {
+    type: String,
+    enum: ['Admin', 'Client', 'Provider'],
+    required: true
+  },
   description: {
     type: String,
     default: ''
   }
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  _id: false
+});
 
 const tenantModel = mongoose.model('tenant', tenantSchema);
 

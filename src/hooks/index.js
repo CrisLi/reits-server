@@ -3,10 +3,8 @@
 // Below is an example of how a hook is written and exported. Please
 // see http://docs.feathersjs.com/hooks/readme.html for more details
 // on hooks.
-const logger = require('./logger');
 const validate = require('./validate');
 
 module.exports = {
-  logger,
   validate
 };
