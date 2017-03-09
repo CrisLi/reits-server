@@ -9,7 +9,10 @@ server.on('listening', () => {
   init(app)
     .then(() => app.logger.info('Reits server data setup finished.'))
     .catch((error) => {
-      app.logger.error(error);
+      app.logger.error(`${error.message} - ${error.stack}`);
+      if (error.errors) {
+        app.logger.debug(error.errors);
+      }
       process.exit(500);
     });
 });

@@ -5,13 +5,13 @@ module.exports = function(app) {
 
   return (error, req, res, next) => {
     if (error) {
-      const message = `${error.code ? `(${error.code}) ` : ''} Route: ${req.url} - ${error.message}`;
+      const message = `${error.code ? `(${error.code}) ` : ''} Route: ${req.method} ${req.url} - ${error.message}`;
 
-      if (error.code === 404) {
-        logger.info(message);
-      } else {
-        logger.error(message);
+      logger.error(message);
+
+      if (error.code !== 404) {
         logger.debug(error.stack);
+        logger.debug(error.errors);
       }
     }
 
