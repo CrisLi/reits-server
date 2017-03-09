@@ -4,6 +4,10 @@ const init = require('./src/init');
 const port = app.get('port');
 const server = app.listen(port);
 
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason);
+});
+
 server.on('listening', () => {
   app.logger.info(`Reits server started on ${app.get('host')}:${port}`);
   init(app)

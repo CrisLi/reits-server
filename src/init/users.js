@@ -2,7 +2,7 @@ module.exports = (app) => {
   const superAdmin = {
     email: 'admin@reits.com',
     password: 'helloreits!',
-    role: ['Admin'],
+    roles: ['Admin'],
     displayName: 'admin',
     tenantId: 'reits'
   };

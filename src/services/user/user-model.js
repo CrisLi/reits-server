@@ -25,10 +25,10 @@ const userSchema = new Schema({
   displayName: {
     type: String
   },
-  role: {
-    type: [String],
+  roles: [{
+    type: String,
     enum: ['Admin', 'PM', 'FA', 'Finance', 'Client']
-  }
+  }]
 }, {
   timestamps: true
 });

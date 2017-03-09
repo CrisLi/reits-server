@@ -5,14 +5,8 @@ const events = require('./events');
 
 module.exports = function() {
   const app = this;
-  const {
-    paginate
-  } = app.get('service');
-  const options = {
-    Model: tenant,
-    paginate,
-    overwrite: false
-  };
+  const options = app.get('service');
+  options['Model'] = tenant;
 
   app.use('/tenants', service(options));
 

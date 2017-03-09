@@ -17,6 +17,7 @@
     "paginate": {
       "default": 500,
       "max": 500
-    }
+    },
+    "overwrite": false
   }
 }
