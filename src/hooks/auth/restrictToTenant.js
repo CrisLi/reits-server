@@ -1,8 +1,6 @@
-const errors = require('feathers-errors');
-
-module.exports = (options = {}) => (
+module.exports = () => (
   (hook) => {
-    const { params: { user, query }, app: { logger }, data } = hook;
+    const { params: { user, query }, app: { logger } } = hook;
 
     // If it was a no user call then skip this hook
     if (user === undefined) {
@@ -17,12 +15,6 @@ module.exports = (options = {}) => (
     }
 
     logger.debug(`Restrict to tenant [${tenantId}] for user [${user.email}].`);
-
-    const { tenantField = 'tenantId' } = options;
-
-    if (hook.params.provider && data[tenantField] !== tenantId) {
-      throw new errors.Forbidden(`You do not have valid permissions to access this tenant [${tenantId}].`, { errors: { tenantId } });
-    }
 
     query.tenantId = user.tenantId;
 

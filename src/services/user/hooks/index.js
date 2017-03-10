@@ -2,6 +2,7 @@ const hooks = require('feathers-hooks');
 const { iff, isNot } = require('feathers-hooks-common');
 const { validate, checkTenant, auth } = require('../../../hooks');
 const schema = require('../schema');
+const create = require('./create');
 
 const isClient = () => hook => hook.data.tenantId === 'client';
 
@@ -19,7 +20,7 @@ exports.before = {
   ],
   create: [
     validate(schema),
-    iff(isNot(isClient()), auth.tokenAuth()),
+    iff(isNot(isClient()), auth.tokenAuth(), create()),
     checkTenant(hook => hook.data.tenantId),
     auth.restrictToTenant(),
     auth.hashPassword()

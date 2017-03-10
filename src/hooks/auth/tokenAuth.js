@@ -2,11 +2,11 @@ const { combine } = require('feathers-hooks-common');
 const auth = require('feathers-authentication').hooks;
 
 module.exports = () => (
-  (hook) => {
+  hook => (
     combine(
       auth.verifyToken(),
       auth.populateUser(),
       auth.restrictToAuthenticated()
-    ).call(this, hook);
-  }
+    ).call(this, hook)
+  )
 );
