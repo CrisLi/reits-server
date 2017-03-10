@@ -10,30 +10,30 @@ exports.before = {
     hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
   ],
   find: [
-    ...auth.tokenAuth(),
+    auth.tokenAuth(),
     auth.restrictToTenant()
   ],
   get: [
-    ...auth.tokenAuth(),
+    auth.tokenAuth(),
     auth.restrictToOwner({ ownerField: '_id' })
   ],
   create: [
     validate(schema),
-    iff(isNot(isClient()), ...auth.tokenAuth()),
+    iff(isNot(isClient()), auth.tokenAuth()),
     checkTenant(hook => hook.data.tenantId),
     auth.restrictToTenant(),
     auth.hashPassword()
   ],
   update: [
-    ...auth.tokenAuth(),
+    auth.tokenAuth(),
     auth.restrictToOwner({ ownerField: '_id' })
   ],
   patch: [
-    ...auth.tokenAuth(),
+    auth.tokenAuth(),
     auth.restrictToOwner({ ownerField: '_id' })
   ],
   remove: [
-    ...auth.tokenAuth(),
+    auth.tokenAuth(),
     auth.restrictToOwner({ ownerField: '_id' })
   ]
 };
