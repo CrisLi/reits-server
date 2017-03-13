@@ -7,7 +7,7 @@ module.exports = () => (hook) => {
   if (!provider) {
     return hook;
   }
-  if (!user) {
+  if (user === undefined) {
     // this is client user registration.
     return hook;
   }

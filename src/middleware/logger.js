@@ -11,7 +11,9 @@ module.exports = function(app) {
 
       if (error.code !== 404) {
         logger.debug(error.stack);
-        logger.debug(error.errors);
+        if (error.errors && Object.keys(error.errors).length > 0) {
+          app.logger.debug(error.errors);
+        }
       }
     }
 

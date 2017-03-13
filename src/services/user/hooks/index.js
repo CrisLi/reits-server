@@ -16,7 +16,7 @@ exports.before = {
   ],
   get: [
     auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.restrictToTenant()
   ],
   create: [
     validate(schema),

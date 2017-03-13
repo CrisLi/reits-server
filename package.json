@@ -18,7 +18,8 @@
   "scripts": {
     "lint": "eslint index.js src/.",
     "start": "nodemon index.js",
-    "start:pro": "NODE_ENV=production node index.js"
+    "start:pro": "NODE_ENV=production node index.js",
+    "test": "NODE_ENV=testing mocha index.test.js"
   },
   "dependencies": {
     "body-parser": "^1.17.0",
@@ -44,12 +45,15 @@
     "winston-daily-rotate-file": "^1.4.5"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "eslint": "^3.17.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-kitty": "^1.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
+    "mocha": "^3.2.0",
     "nodemon": "^1.11.0"
   }
 }
