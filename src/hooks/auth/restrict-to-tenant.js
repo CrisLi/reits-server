@@ -1,4 +1,6 @@
-module.exports = () => (
+const errors = require('feathers-errors');
+
+module.exports = (options = { reits: false }) => (
   (hook) => {
     const { params: { user, query }, app: { logger } } = hook;
 
@@ -12,6 +14,11 @@ module.exports = () => (
     if (tenantId === 'reits') {
       logger.debug(`No restrict to any tenants for user [${user.email}].`);
       return hook;
+    }
+
+    // Only reits tenant user can do this request
+    if (options.reits) {
+      throw new errors.Forbidden('You do not have the permissions to access this.');
     }
 
     logger.debug(`Restrict to tenant [${tenantId}] for user [${user.email}].`);

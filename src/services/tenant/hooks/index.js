@@ -1,8 +1,7 @@
 const hooks = require('feathers-hooks');
-const auth = require('feathers-authentication').hooks;
 const { iff, isProvider } = require('feathers-hooks-common');
 const slug = require('slug');
-const { validate } = require('../../../hooks');
+const { validate, auth } = require('../../../hooks');
 const schema = require('../schema');
 
 const setValue = (key, cb) => (
@@ -24,26 +23,29 @@ exports.before = {
     hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
   ],
   find: [
+    auth.tokenAuth(),
+    auth.restrictToTenant({ reits: true }),
+    externalRequest()
+  ],
+  get: [
+    auth.tokenAuth(),
+    auth.restrictToTenant(),
     externalRequest()
   ],
   create: [
-    auth.verifyToken(),
-    auth.populateUser(),
-    auth.restrictToAuthenticated(),
+    auth.tokenAuth(),
+    auth.restrictToTenant({ reits: true }),
     validate(schema),
     setValue('_id', data => slug(data.name, { lower: true })),
     iff(isProvider('external'), setValue('type', () => 'Provider'))
   ],
   update: [
-    (hook) => {
-      console.log(hook.id);
-    },
-    hooks.remove('name', 'type', 'slug')
+    auth.tokenAuth(),
+    auth.restrictToTenant({ reits: true }),
+    validate(schema),
+    hooks.remove('_id', 'name', 'type')
   ],
-  patch: [
-    hooks.remove('name', 'type', 'slug'),
-    externalRequest()
-  ],
+  patch: hooks.disable('external'),
   remove: hooks.disable('external')
 };
 

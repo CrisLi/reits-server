@@ -19,7 +19,7 @@
     "lint": "eslint index.js src/.",
     "start": "nodemon index.js",
     "start:pro": "NODE_ENV=production node index.js",
-    "test": "NODE_ENV=testing mocha index.test.js"
+    "test": "NODE_ENV=testing mocha"
   },
   "dependencies": {
     "body-parser": "^1.17.0",
