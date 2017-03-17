@@ -1,6 +1,7 @@
 const authentication = require('./authentication');
 const tenant = require('./tenant');
 const user = require('./user');
+const projects = require('./project');
 const mongoose = require('mongoose');
 
 module.exports = function() {
@@ -11,5 +12,6 @@ module.exports = function() {
 
   app.configure(authentication);
   app.configure(tenant);
+  app.configure(projects);
   app.configure(user);
 };

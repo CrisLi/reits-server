@@ -4,11 +4,9 @@
 // see http://docs.feathersjs.com/hooks/readme.html for more details
 // on hooks.
 const validate = require('./validate');
-const checkTenant = require('./checkTenant');
 const auth = require('./auth');
 
 module.exports = {
   validate,
-  checkTenant,
   auth
 };

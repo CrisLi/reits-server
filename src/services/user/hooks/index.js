@@ -1,42 +1,38 @@
 const hooks = require('feathers-hooks');
 const { iff, isNot } = require('feathers-hooks-common');
-const { validate, checkTenant, auth } = require('../../../hooks');
+const { validate, auth } = require('../../../hooks');
 const schema = require('../schema');
-const create = require('./create');
 
 const isClient = () => hook => hook.data.tenantId === 'client';
+
+const populateTenant = () => (hook) => {
+  const { data, params } = hook;
+  params.tenantId = data.tenantId;
+  return hook;
+};
 
 exports.before = {
   all: [
     hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
   ],
   find: [
-    auth.tokenAuth(),
-    auth.restrictToTenant()
+    auth.tokenAuth()
   ],
   get: [
-    auth.tokenAuth(),
-    auth.restrictToTenant()
+    auth.tokenAuth()
   ],
   create: [
+    populateTenant(),
+    iff(isNot(isClient()), auth.tokenAuth()),
     validate(schema),
-    iff(isNot(isClient()), auth.tokenAuth(), create()),
-    checkTenant(hook => hook.data.tenantId),
-    auth.restrictToTenant(),
     auth.hashPassword()
   ],
   update: [
     auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    validate(schema)
   ],
-  patch: [
-    auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
-  ],
-  remove: [
-    auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
-  ]
+  patch: hooks.disable('external'),
+  remove: hooks.disable('external')
 };
 
 exports.after = {
