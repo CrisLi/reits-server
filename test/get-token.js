@@ -1,7 +1,7 @@
 const chai = require('chai');
 
 const admin = {
-  email: 'admin@reits.com',
+  username: 'admin@reits',
   password: 'helloreits!'
 };
 

@@ -2,6 +2,7 @@ const hooks = require('feathers-hooks');
 const { iff, isProvider } = require('feathers-hooks-common');
 const slug = require('slug');
 const { validate, auth } = require('../../../hooks');
+const afterCreate = require('./after-create');
 const schema = require('../schema');
 
 const setValue = (key, cb) => (
@@ -52,5 +53,8 @@ exports.before = {
 exports.after = {
   all: [
     hooks.remove('type', '__v')
+  ],
+  create: [
+    afterCreate()
   ]
 };

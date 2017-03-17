@@ -7,7 +7,21 @@ const isClient = () => hook => hook.data.tenantId === 'client';
 
 const populateTenant = () => (hook) => {
   const { data, params } = hook;
+  if (!data.tenantId) {
+    data.tenantId = 'client';
+    data.roles = ['Client'];
+  }
   params.tenantId = data.tenantId;
+  return hook;
+};
+
+const normalizeData = () => (hook) => {
+  const { data } = hook;
+  if (!data.displayName) {
+    data.displayName = data.username;
+  }
+  // The real login used username would be this.
+  data.username = `${data.username}@${data.tenantId}`;
   return hook;
 };
 
@@ -25,6 +39,7 @@ exports.before = {
     populateTenant(),
     iff(isNot(isClient()), auth.tokenAuth()),
     validate(schema),
+    normalizeData(),
     auth.hashPassword()
   ],
   update: [

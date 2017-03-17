@@ -11,7 +11,9 @@
       "issuer": "reits"
     },
     "localEndpoint": "/auth",
-    "local": {}
+    "local": {
+      "usernameField": "username"
+    }
   },
   "service": {
     "paginate": {

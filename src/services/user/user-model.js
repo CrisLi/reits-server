@@ -13,10 +13,14 @@ const userSchema = new Schema({
     required: true,
     index: 1
   },
-  email: {
+  username: {
     type: String,
     required: true,
     unique: true
+  },
+  email: {
+    type: String,
+    index: 1
   },
   password: {
     type: String,

@@ -1,6 +1,6 @@
 module.exports = (app) => {
   const superAdmin = {
-    email: 'admin@reits.com',
+    username: 'admin',
     password: 'helloreits!',
     roles: ['Admin'],
     displayName: 'admin',
@@ -8,12 +8,11 @@ module.exports = (app) => {
   };
 
   const userService = app.service('/users');
+  const throwIfNot409 = (err) => {
+    if (err.code !== 409) {
+      throw err;
+    }
+  };
 
-  return userService
-    .create(superAdmin)
-    .catch((err) => {
-      if (err.code !== 409) {
-        throw err;
-      }
-    });
+  return userService.create(superAdmin).catch(throwIfNot409);
 };

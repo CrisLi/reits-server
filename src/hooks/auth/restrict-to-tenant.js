@@ -15,13 +15,13 @@ const tenantExists = (hook) => {
 
 const adminTenant = (hook) => {
   const { params: { user }, app: { logger } } = hook;
-  logger.debug(`No restrict to any tenants for user [${user.email}].`);
+  logger.debug(`No restrict to any tenants for user [${user.username}].`);
   return tenantExists(hook);
 };
 
 const clientTenant = (hook) => {
   const { params: { user }, app: { logger } } = hook;
-  logger.debug(`Not implement tenant restriction for client user [${user.email}] yet.`);
+  logger.debug(`Not implement tenant restriction for client user [${user.username}] yet.`);
   return hook;
 };
 
@@ -33,11 +33,11 @@ const providerTenant = (hook, options) => {
 
   const { params: { user, query, tenantId }, app: { logger } } = hook;
 
-  logger.debug(`Restrict to tenant [${user.tenantId}] for user [${user.email}].`);
+  logger.debug(`Restrict to tenant [${user.tenantId}] for user [${user.username}].`);
 
   // Tenant Id is in the request url.
   if (tenantId && (tenantId !== user.tenantId)) {
-    logger.debug(`User [${user.email}] can't access the resources of tenant [${tenantId}].`);
+    logger.debug(`User [${user.username}] can't access the resources of tenant [${tenantId}].`);
     throw new errors.Forbidden('You do not have the permissions to access this.');
   }
 

@@ -25,7 +25,7 @@ describe('[users api]', () => {
 
   describe('super admin', () => {
     const pmInReits = {
-      email: 'chris@reits.com',
+      username: 'pm-reits',
       password: '12345678',
       roles: ['PM'],
       tenantId: 'reits'
@@ -36,7 +36,7 @@ describe('[users api]', () => {
       type: 'Provider'
     };
     const pmInChris = {
-      email: 'pm@chris.com',
+      username: 'pm-chris',
       password: '12345678',
       roles: ['PM'],
       tenantId: 'chris'
@@ -59,7 +59,7 @@ describe('[users api]', () => {
         .send(pmInReits)
         .end((err, res) => {
           res.body.should.have.property('_id');
-          res.body.should.have.property('email', 'chris@reits.com');
+          res.body.should.have.property('username', 'pm-reits@reits');
           done();
         });
     });
@@ -72,7 +72,19 @@ describe('[users api]', () => {
         .send(pmInChris)
         .end((err, res) => {
           res.body.should.have.property('_id');
-          res.body.should.have.property('email', 'pm@chris.com');
+          res.body.should.have.property('username', 'pm-chris@chris');
+          done();
+        });
+    });
+
+    it('can get all users', (done) => {
+      chai.request(this.app)
+        .get('/users')
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer '.concat(this.token))
+        .end((err, res) => {
+          res.body.should.have.property('data');
+          res.body.data.should.have.lengthOf(4);
           done();
         });
     });
@@ -99,32 +111,27 @@ describe('[users api]', () => {
       name: 'kitty',
       type: 'Provider'
     };
-    const chris = {
-      email: 'admin@chris.com',
-      password: '12345678',
-      roles: ['Admin'],
-      tenantId: 'chris'
-    };
-
     const pmInChris = {
-      email: 'pm@chris.com',
+      username: 'pm-chris',
       password: '12345678',
       roles: ['PM'],
       tenantId: 'chris'
     };
     const pmInKitty = {
-      email: 'pm@kitty.com',
+      username: 'pm-kitty',
       password: '12345678',
       roles: ['PM'],
       tenantId: 'kitty'
     };
+    const chris = {
+      username: 'admin@chris',
+      password: 'admin123456'
+    };
 
     before(() => {
       const tenantService = this.app.service('/tenants');
-      const userService = this.app.service('/users');
       return tenantService.create(chrisTenant)
         .then(() => tenantService.create(kittyTenant))
-        .then(() => userService.create(chris))
         .then(() => getToken(this.app, chris))
         .then(token => (this.token = token));
     });
@@ -164,14 +171,24 @@ describe('[users api]', () => {
           done();
         });
     });
+
+    it('only can get the users in self tenant', (done) => {
+      chai.request(this.app)
+        .get('/users')
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer '.concat(this.token))
+        .end((err, res) => {
+          res.body.should.have.property('data');
+          res.body.data.should.have.lengthOf(2);
+          done();
+        });
+    });
   });
 
   describe('client user', () => {
     const kitty = {
-      email: 'kitty@self.com',
-      password: '12345678',
-      roles: ['Client'],
-      tenantId: 'client'
+      username: 'kitty',
+      password: '12345678'
     };
 
     after(() => cleanDb(this.app));
