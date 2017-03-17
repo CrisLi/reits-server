@@ -3,17 +3,23 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../src/server');
 const getToken = require('./get-token');
-const cleanDb = require('./clean-db');
+const db = require('./db');
 
 chai.use(chaiHttp);
 chai.should();
+
+const init = (app, done) => {
+  this.app = app;
+  this.db = db(app);
+  this.getToken = getToken(app);
+  done();
+};
 
 describe('[users api]', () => {
   before((done) => {
     this.server = server.startup();
     this.server.on('startup', (app) => {
-      this.app = app;
-      done();
+      init(app, done);
     });
   });
 
@@ -45,11 +51,11 @@ describe('[users api]', () => {
     before(() => {
       const tenantService = this.app.service('/tenants');
       return tenantService.create(chrisTenant)
-        .then(() => getToken(this.app))
+        .then(() => this.getToken())
         .then(token => (this.token = token));
     });
 
-    after(() => cleanDb(this.app));
+    after(() => this.db.clean());
 
     it('can create user on [reits] tenant', (done) => {
       chai.request(this.app)
@@ -128,15 +134,14 @@ describe('[users api]', () => {
       password: 'admin123456'
     };
 
-    before(() => {
-      const tenantService = this.app.service('/tenants');
-      return tenantService.create(chrisTenant)
-        .then(() => tenantService.create(kittyTenant))
-        .then(() => getToken(this.app, chris))
-        .then(token => (this.token = token));
-    });
+    before(() => (
+      this.db.createTenant(chrisTenant)
+        .then(() => this.db.createTenant(kittyTenant))
+        .then(() => this.getToken(chris))
+        .then(token => (this.token = token))
+    ));
 
-    after(() => cleanDb(this.app));
+    after(() => this.db.clean());
 
     it('can create tenant user', (done) => {
       chai.request(this.app)
@@ -191,7 +196,7 @@ describe('[users api]', () => {
       password: '12345678'
     };
 
-    after(() => cleanDb(this.app));
+    after(() => this.db.clean());
 
     it('can register', (done) => {
       chai.request(this.app)

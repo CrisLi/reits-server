@@ -5,7 +5,7 @@ const admin = {
   password: 'helloreits!'
 };
 
-module.exports = (app, user = admin) => (
+module.exports = app => (user = admin) => (
   new Promise((resolve, reject) => {
     chai.request(app)
       .post('/auth')

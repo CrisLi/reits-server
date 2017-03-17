@@ -3,24 +3,23 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../src/server');
 const getToken = require('./get-token');
-const cleanDb = require('./clean-db');
+const db = require('./db');
 
 chai.use(chaiHttp);
 chai.should();
 
-const chris = {
-  email: 'admin@chris.com',
-  password: '12345678',
-  tenantId: 'chris',
-  roles: ['Admin']
+const init = (app, done) => {
+  this.app = app;
+  this.db = db(app);
+  this.getToken = getToken(app);
+  done();
 };
 
 describe('[tenants api]', () => {
   before((done) => {
     this.server = server.startup();
     this.server.on('startup', (app) => {
-      this.app = app;
-      done();
+      init(app, done);
     });
   });
 
@@ -32,13 +31,10 @@ describe('[tenants api]', () => {
 
   describe('super admin', () => {
     before(() => (
-      getToken(this.app)
-        .then((token) => {
-          this.token = token;
-        })
+      this.getToken().then(token => (this.token = token))
     ));
 
-    after(() => cleanDb(this.app));
+    after(() => this.db.clean());
 
     it('can create tenant', (done) => {
       chai.request(this.app)
@@ -56,16 +52,18 @@ describe('[tenants api]', () => {
   });
 
   describe('tenant admin', () => {
-    before(() => {
-      const tenantService = this.app.service('/tenants');
-      const userSerivce = this.app.service('/users');
-      return tenantService.create({ name: 'chris', type: 'Provider' })
-        .then(() => userSerivce.create(chris))
-        .then(() => getToken(this.app, chris))
-        .then(token => (this.token = token));
-    });
+    const chris = {
+      username: 'admin@chris',
+      password: 'admin123456'
+    };
 
-    after(() => cleanDb(this.app));
+    before(() => (
+      this.db.createTenant({ name: 'chris', type: 'Provider' })
+        .then(() => this.getToken(chris))
+        .then(token => (this.token = token))
+    ));
+
+    after(() => this.db.clean());
 
     it("can't create tenant", (done) => {
       chai.request(this.app)
@@ -86,9 +84,6 @@ describe('[tenants api]', () => {
         .get('/tenants')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer '.concat(this.token))
-        .send({
-          name: 'kitty'
-        })
         .end((err, res) => {
           res.body.should.have.property('code', 403);
           done();

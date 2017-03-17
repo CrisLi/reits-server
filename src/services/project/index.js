@@ -8,9 +8,9 @@ module.exports = function() {
   const options = app.get('service');
   options['Model'] = project;
 
-  app.use('/:tenantId/projects', service(options));
+  app.use('/projects', service(options));
 
-  const projectService = app.service('/:tenantId/projects');
+  const projectService = app.service('/projects');
 
   projectService.before(hooks.before);
   projectService.after(hooks.after);
