@@ -18,18 +18,13 @@ exports.before = {
   ],
   update: [
     auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    validate(schema),
+    hooks.remove('name', 'status')
   ],
-  patch: [
-    auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
-  ],
-  remove: [
-    auth.tokenAuth(),
-    auth.restrictToOwner({ ownerField: '_id' })
-  ]
+  patch: hooks.disable('external'),
+  remove: hooks.disable('external')
 };
 
 exports.after = {
-  all: [hooks.remove('password', '__v')]
+  all: [hooks.remove('__v')]
 };
