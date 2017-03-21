@@ -24,8 +24,7 @@ exports.before = {
     hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
   ],
   find: [
-    auth.tokenAuth(),
-    auth.restrictToTenant({ reits: true }),
+    auth.tokenAuth({ reits: true }),
     externalRequest()
   ],
   get: [
@@ -34,15 +33,13 @@ exports.before = {
     externalRequest()
   ],
   create: [
-    auth.tokenAuth(),
-    auth.restrictToTenant({ reits: true }),
+    auth.tokenAuth({ reits: true }),
     validate(schema),
     setValue('_id', data => slug(data.name, { lower: true })),
     iff(isProvider('external'), setValue('type', () => 'Provider'))
   ],
   update: [
-    auth.tokenAuth(),
-    auth.restrictToTenant({ reits: true }),
+    auth.tokenAuth({ reits: true }),
     validate(schema),
     hooks.remove('_id', 'name', 'type')
   ],

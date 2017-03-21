@@ -30,7 +30,7 @@ describe('[users api]', () => {
   });
 
   describe('super admin', () => {
-    const pmInReits = {
+    const pmReits = {
       username: 'pm-reits',
       password: '12345678',
       roles: ['PM'],
@@ -41,7 +41,7 @@ describe('[users api]', () => {
       name: 'chris',
       type: 'Provider'
     };
-    const pmInChris = {
+    const pmChris = {
       username: 'pm-chris',
       password: '12345678',
       roles: ['PM'],
@@ -62,10 +62,11 @@ describe('[users api]', () => {
         .post('/users')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer '.concat(this.token))
-        .send(pmInReits)
+        .send(pmReits)
         .end((err, res) => {
           res.body.should.have.property('_id');
           res.body.should.have.property('username', 'pm-reits@reits');
+          res.body.should.have.property('tenantId', 'reits');
           done();
         });
     });
@@ -75,10 +76,11 @@ describe('[users api]', () => {
         .post('/users')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer '.concat(this.token))
-        .send(pmInChris)
+        .send(pmChris)
         .end((err, res) => {
           res.body.should.have.property('_id');
           res.body.should.have.property('username', 'pm-chris@chris');
+          res.body.should.have.property('tenantId', 'chris');
           done();
         });
     });
@@ -95,10 +97,10 @@ describe('[users api]', () => {
         });
     });
 
-    it("can't create tenant user without token", (done) => {
+    it("can't create user without token", (done) => {
       chai.request(this.app)
         .post('/users')
-        .send(pmInReits)
+        .send(pmReits)
         .end((err, res) => {
           res.body.should.have.property('code', 401);
           done();
@@ -117,13 +119,12 @@ describe('[users api]', () => {
       name: 'kitty',
       type: 'Provider'
     };
-    const pmInChris = {
+    const pmChris = {
       username: 'pm-chris',
       password: '12345678',
-      roles: ['PM'],
-      tenantId: 'chris'
+      roles: ['PM']
     };
-    const pmInKitty = {
+    const pmKitty = {
       username: 'pm-kitty',
       password: '12345678',
       roles: ['PM'],
@@ -148,7 +149,7 @@ describe('[users api]', () => {
         .post('/users')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer '.concat(this.token))
-        .send(pmInChris)
+        .send(pmChris)
         .end((err, res) => {
           res.body.should.have.property('_id');
           done();
@@ -158,33 +159,33 @@ describe('[users api]', () => {
     it("can't create tenant user without token", (done) => {
       chai.request(this.app)
         .post('/users')
-        .send(pmInChris)
+        .send(pmChris)
         .end((err, res) => {
           res.body.should.have.property('code', 401);
           done();
         });
     });
 
-    it("can't create tenant user in other tenant", (done) => {
+    it('tenant id in the request body will be ignore', (done) => {
       chai.request(this.app)
         .post('/users')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer '.concat(this.token))
-        .send(pmInKitty)
+        .send(pmKitty)
         .end((err, res) => {
-          res.body.should.have.property('code', 403);
+          res.body.should.have.property('tenantId', 'chris');
           done();
         });
     });
 
-    it('only can get the users in self tenant', (done) => {
+    it('only can get the users in owen tenant', (done) => {
       chai.request(this.app)
         .get('/users')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer '.concat(this.token))
         .end((err, res) => {
           res.body.should.have.property('data');
-          res.body.data.should.have.lengthOf(2);
+          res.body.data.should.have.lengthOf(3);
           done();
         });
     });
@@ -193,7 +194,8 @@ describe('[users api]', () => {
   describe('client user', () => {
     const kitty = {
       username: 'kitty',
-      password: '12345678'
+      password: '12345678',
+      tenantId: 'client'
     };
 
     after(() => this.db.clean());

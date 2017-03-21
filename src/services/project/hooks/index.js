@@ -7,22 +7,14 @@ exports.before = {
     hooks.remove('_id', 'updatedAt', 'createdAt', '__v')
   ],
   find: [
-    auth.tokenAuth(),
-    auth.restrictToTenant()
+    auth.tokenAuth()
   ],
   get: [
-    auth.tokenAuth(),
-    auth.restrictToTenant()
+    auth.tokenAuth()
   ],
   create: [
     auth.tokenAuth(),
-    auth.restrictToTenant(),
-    validate(schema),
-    (hook) => {
-      const { data, params } = hook;
-      data['tenantId'] = params.tenantId;
-      return hook;
-    }
+    validate(schema)
   ],
   update: [
     auth.tokenAuth(),

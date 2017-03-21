@@ -5,13 +5,11 @@ const schema = require('../schema');
 
 const isClient = () => hook => hook.data.tenantId === 'client';
 
-const populateTenant = () => (hook) => {
-  const { data, params } = hook;
-  if (!data.tenantId) {
-    data.tenantId = 'client';
+const decorateForClient = () => (hook) => {
+  const { data } = hook;
+  if (data.tenantId === 'client') {
     data.roles = ['Client'];
   }
-  params.tenantId = data.tenantId;
   return hook;
 };
 
@@ -36,7 +34,7 @@ exports.before = {
     auth.tokenAuth()
   ],
   create: [
-    populateTenant(),
+    decorateForClient(),
     iff(isNot(isClient()), auth.tokenAuth()),
     validate(schema),
     normalizeData(),
