@@ -1,5 +1,10 @@
-module.exports = (service, app) => {
-  service.on('created', user => (
-    app.logger.info(`User [${user.username}] created.`)
-  ));
+module.exports = (service) => {
+  service.on('created', (user, hook) => {
+    const { app } = hook;
+    if (user.tenantId === 'client') {
+      app.logger.info(`User [${user.username}] registered.`);
+    } else {
+      app.logger.info(`User [${user.username}] created.`);
+    }
+  });
 };

@@ -16,5 +16,5 @@ module.exports = function() {
   userService.before(hooks.before);
   userService.after(hooks.after);
 
-  events(userService, app);
+  events(userService);
 };

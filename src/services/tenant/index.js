@@ -15,5 +15,5 @@ module.exports = function() {
   tenantService.before(hooks.before);
   tenantService.after(hooks.after);
 
-  events(tenantService, app);
+  events(tenantService);
 };

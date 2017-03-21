@@ -15,5 +15,5 @@ module.exports = function() {
   projectService.before(hooks.before);
   projectService.after(hooks.after);
 
-  events(projectService, app);
+  events(projectService);
 };
