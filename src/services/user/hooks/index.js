@@ -41,8 +41,15 @@ exports.before = {
     auth.hashPassword()
   ],
   update: [
+    decorateForClient(),
     auth.tokenAuth(),
-    validate(schema)
+    (hook) => {
+      // only for pass schema validate, will not save into db.
+      const { data } = hook;
+      data.password = 'dummy';
+    },
+    validate(schema),
+    hooks.remove('username', 'tenantId', 'password')
   ],
   patch: hooks.disable('external'),
   remove: hooks.disable('external')

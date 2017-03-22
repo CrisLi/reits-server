@@ -81,6 +81,23 @@ describe('[users api]', () => {
           res.body.should.have.property('_id');
           res.body.should.have.property('username', 'pm-chris@chris');
           res.body.should.have.property('tenantId', 'chris');
+          this.userId = res.body['_id'];
+          done();
+        });
+    });
+
+    it('can update user', (done) => {
+      chai.request(this.app)
+        .put(`/users/${this.userId}`)
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer '.concat(this.token))
+        .send(Object.assign({}, pmChris, { username: 'dummy', roles: ['FA'], displayName: 'Chris Li' }))
+        .end((err, res) => {
+          res.body.should.have.property('_id');
+          res.body.should.have.property('username', 'pm-chris@chris');
+          res.body.should.have.property('displayName', 'Chris Li');
+          res.body.roles.should.have.members(['FA']);
+          delete this.userId;
           done();
         });
     });
